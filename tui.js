@@ -183,7 +183,7 @@ class ChatTUI {
         });
 
         // Create input area
-        this.inputBox = blessed.textarea({
+        this.inputBox = blessed.textbox({
             bottom: 0,
             left: 0,
             width: '100%',
@@ -193,8 +193,6 @@ class ChatTUI {
             keys: true,
             vi: false,
             mouse: true,
-            alwaysScroll: true,
-            scrollable: true,
             style: {
                 fg: 'white',
                 bg: 'black',
@@ -235,6 +233,9 @@ class ChatTUI {
         
         // Ensure input box is properly configured for text input
         this.inputBox.setValue('');
+        
+        // Force a render to ensure input box is visible
+        this.screen.render();
     }
 
     setupEventHandlers() {
@@ -279,7 +280,22 @@ class ChatTUI {
 
         // Ensure input box captures all keystrokes
         this.inputBox.on('keypress', (ch, key) => {
-            // This ensures the input box captures all keystrokes
+            // Force update the display to show typed characters
+            this.screen.render();
+        });
+
+        // Handle all input events
+        this.inputBox.on('input', () => {
+            // Update display when input changes
+            this.screen.render();
+        });
+
+        // Force input box to show typed characters
+        this.inputBox.on('key', (ch, key) => {
+            // This ensures all keystrokes are captured and displayed
+            if (key.name && key.name !== 'enter' && key.name !== 'escape') {
+                this.screen.render();
+            }
         });
 
         // Global key handlers for quick actions
