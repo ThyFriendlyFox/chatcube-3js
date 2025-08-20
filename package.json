@@ -1,0 +1,24 @@
+{
+  "name": "tree-chat-tui",
+  "version": "1.0.0",
+  "description": "A tree-based chat interface with TUI navigation",
+  "main": "tui.js",
+  "type": "module",
+  "scripts": {
+    "start": "node tui.js",
+    "dev": "node tui.js"
+  },
+  "dependencies": {
+    "blessed": "^0.1.81",
+    "node-fetch": "^3.3.2"
+  },
+  "keywords": [
+    "chat",
+    "tui",
+    "tree",
+    "llm",
+    "interface"
+  ],
+  "author": "",
+  "license": "MIT"
+}
