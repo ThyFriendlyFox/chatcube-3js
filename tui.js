@@ -148,7 +148,7 @@ class ChatTUI {
             left: 0,
             width: '100%',
             height: 3,
-            content: 'Chat Tree TUI | Arrow Keys: Navigate | Enter: Edit Message | Ctrl+Tab: Switch Focus | q: Quit',
+            content: 'Chat Tree TUI | Arrow Keys: Navigate | Enter: Edit Message | Tab: Switch Focus | q: Quit',
             style: {
                 fg: 'white',
                 bg: 'blue',
@@ -249,14 +249,28 @@ class ChatTUI {
             this.startEditing();
         });
 
-        // Ctrl+Tab to switch focus between tree and input
-        this.treeBox.key(['C-tab'], () => {
+        // Tab key to switch focus between tree and input
+        this.treeBox.key(['tab'], () => {
             this.inputBox.focus();
             this.inputBox.setValue(this.inputBox.getValue() || ''); // Ensure input is visible
+            this.updateStatus('Switched to INPUT MODE');
         });
 
-        this.inputBox.key(['C-tab'], () => {
+        this.inputBox.key(['tab'], () => {
             this.treeBox.focus();
+            this.updateStatus('Switched to NAVIGATION MODE');
+        });
+
+        // F1/F2 as alternative focus switching
+        this.treeBox.key(['f1'], () => {
+            this.inputBox.focus();
+            this.inputBox.setValue(this.inputBox.getValue() || ''); // Ensure input is visible
+            this.updateStatus('Switched to INPUT MODE');
+        });
+
+        this.inputBox.key(['f2'], () => {
+            this.treeBox.focus();
+            this.updateStatus('Switched to NAVIGATION MODE');
         });
 
         // Input handling
@@ -295,6 +309,14 @@ class ChatTUI {
             // This ensures all keystrokes are captured and displayed
             if (key.name && key.name !== 'enter' && key.name !== 'escape') {
                 this.screen.render();
+            }
+        });
+
+        // Prevent Tab from being treated as input
+        this.inputBox.on('keypress', (ch, key) => {
+            if (key.name === 'tab') {
+                // Prevent Tab from being inserted as a character
+                return false;
             }
         });
 
